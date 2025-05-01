@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy&display=swap" rel="stylesheet">
+    <style>
+
+.blurry-balls {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            /* Place behind all other content */
+        }
+
+        .blurry-ball {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(90deg, #8A2BE2, #FF416C);
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: moveBalls 5s infinite ease-in-out;
+        }
+
+        .blurry-ball:nth-child(1) {
+            top: 10%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .blurry-ball:nth-child(2) {
+            top: 50%;
+            left: 70%;
+            animation-delay: 2s;
+        }
+
+        .blurry-ball:nth-child(3) {
+            top: 80%;
+            left: 30%;
+            animation-delay: 4s;
+        }
+
+        @keyframes moveBalls {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(50px, -50px);
+            }
+        }
+        body {
+            margin: 0;
+            font-family: 'Sour Gummy', cursive;
+            background-color: #050505;
+            color: #cbcbcb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow-x: hidden;
+            /* Prevent horizontal scrolling */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            max-height: 90%;
+            /* Limit the height to 90% of the viewport */
+            overflow-y: auto;
+            /* Add vertical scrolling if content exceeds the height */
+            background: rgba(17, 17, 17, 0.5);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            box-sizing: border-box;
+            /* Ensure padding is included in width/height */
+        }
+
+        .container h1 {
+            font-size: 2rem;
+            color: #8A2BE2;
+            margin-bottom: 10px;
+        }
+
+        .container p {
+            font-size: 1rem;
+            color: #cbcbcb;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .container button {
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #8A2BE2, #FF416C);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .container button:hover {
+            background: linear-gradient(90deg, #4B0082, #FF416C);
+        }
+
+        textarea#topicInput {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #222;
+            color: #cbcbcb;
+            font-size: 1rem;
+            resize: none;
+            /* Prevent manual resizing */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
+            /* Add inner shadow for depth */
+            box-sizing: border-box;
+            /* Prevent horizontal overflow due to padding */
+        }
+
+        /* Custom scrollbar for the textarea */
+        textarea#topicInput::-webkit-scrollbar {
+            width: 10px;
+            /* Increase the width of the scrollbar */
+        }
+
+        textarea#topicInput::-webkit-scrollbar-track {
+            background: rgba(34, 34, 34, 0.8);
+            /* Dark background for the scrollbar track */
+            border-radius: 10px;
+            /* Rounded corners for the track */
+        }
+
+        textarea#topicInput::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #8A2BE2, #FF416C);
+            /* Gradient for the scrollbar thumb */
+            border-radius: 10px;
+            /* Rounded corners for the thumb */
+            border: 2px solid rgba(34, 34, 34, 0.8);
+            /* Add a border for better contrast */
+        }
+
+        textarea#topicInput::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(90deg, #4B0082, #FF416C);
+            /* Hover effect for the scrollbar thumb */
+        }
+
+        .menu-toggle {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #8A2BE2;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background: rgba(17, 17, 17, 0.4);
+            color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            transition: left 0.3s ease;
+            z-index: 999;
+        }
+
+        .side-menu.open {
+            left: 0;
+        }
+
+        .side-menu h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #cbcbcb;
+        }
+
+        .side-menu a {
+            display: block;
+            color: #8A2BE2;
+            text-decoration: none;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .side-menu a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="blurry-balls">
+        <div class="blurry-ball"></div>
+        <div class="blurry-ball"></div>
+        <div class="blurry-ball"></div>
+    </div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
+
+    <div class="side-menu" id="sideMenu">
+        <h2>Menu</h2>
+        <a href="/templates/home.html">Home</a>
+        <a href="/templates/view-profile.html">View Profile</a>
+        <a href="/templates/settings.html">Settings</a>
+        <a href="/templates/login.html">Logout</a>
+    </div>
+
+    <div class="container">
+        <h1>MCQ Generator</h1>
+        <p>Welcome to the MCQ Generator! Use this tool to create multiple-choice questions quickly and efficiently.
+            Click the button below to start generating your MCQs.</p>
+        <textarea id="topicInput" placeholder="Enter a topic..."
+            style="width: 100%; height: 100px; padding: 10px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #444; background-color: #222; color: #cbcbcb; font-size: 1rem; resize: none; overflow-y: auto;">
+        </textarea>
+        <button onclick="generateMCQs()">Generate</button>
+        <div id="mcqContainer"></div> <!-- Container for dynamically added MCQs -->
+
+        <!-- Submit Button (Initially Hidden) -->
+        <button id="submitButton" onclick="validateMarks()" style="margin-top: 20px; display: none;">Submit</button>
+    </div>
+
+    <script>
+        let questions = [
+            {
+                question: "What is the capital of France?",
+                options: ["Paris", "London", "Berlin", "Madrid"],
+                answer: "Paris" // Correct answer
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Earth", "Mars", "Jupiter", "Venus"],
+                answer: "Mars" // Correct answer
+            },
+            {
+                question: "Who wrote 'Hamlet'?",
+                options: ["William Shakespeare", "Charles Dickens", "Mark Twain", "Jane Austen"],
+                answer: "William Shakespeare" // Correct answer
+            }
+        ];
+
+        function generateMCQs() {
+            const mcqContainer = document.getElementById('mcqContainer');
+            const submitButton = document.getElementById('submitButton');
+
+            // Clear any existing MCQs
+            mcqContainer.innerHTML = '';
+
+            // Example MCQs (you can replace this with dynamically generated content)
+
+
+            // Generate MCQs dynamically
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.style.marginTop = '20px';
+                questionDiv.style.textAlign = 'left';
+
+                const questionText = document.createElement('p');
+                questionText.textContent = `${index + 1}. ${q.question}`;
+                questionText.style.fontWeight = 'bold';
+                questionDiv.appendChild(questionText);
+
+                q.options.forEach(option => {
+                    const optionLabel = document.createElement('label');
+                    optionLabel.style.display = 'block';
+                    optionLabel.style.marginBottom = '5px';
+
+                    const optionInput = document.createElement('input');
+                    optionInput.type = 'radio';
+                    optionInput.name = `question${index}`;
+                    optionInput.value = option;
+
+                    optionLabel.appendChild(optionInput);
+                    optionLabel.appendChild(document.createTextNode(` ${option}`));
+                    questionDiv.appendChild(optionLabel);
+                });
+
+                mcqContainer.appendChild(questionDiv);
+            });
+
+            // Make the Submit button visible
+            submitButton.style.display = 'block';
+        }
+
+        function validateMarks() {
+
+
+            let score = 0;
+
+            questions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selectedOption && selectedOption.value === q.answer) {
+                    score++;
+                }
+            });
+
+            alert(`Your score is ${score} out of ${questions.length}`);
+        }
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            menu.classList.toggle('open');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Sour+Gummy&display=swap" rel="stylesheet">
+    <style>
+        .blurry-balls {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .blurry-ball {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 0, 0, 1), transparent);
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        .blurry-ball:nth-child(1) {
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.9), transparent);
+            /* Violet */
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .blurry-ball:nth-child(2) {
+            background: radial-gradient(circle, rgba(255, 69, 0, 0.9), transparent);
+            /* Red */
+            top: 50%;
+            left: 70%;
+            animation-delay: 2s;
+        }
+
+        .blurry-ball:nth-child(3) {
+            background: radial-gradient(circle, rgba(255, 0, 255, 0.6), transparent);
+            /* Bluish Red */
+            top: 80%;
+            left: 30%;
+            animation-delay: 4s;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: 0.4;
+            }
+        }
+
+        /* General Styles */
+body {
+    margin: 0;
+    font-family: 'Sour Gummy', cursive;
+    background-color: #050505;
+    color: #cbcbcb;
+}
+
+header {
+    padding: 40px 20px 20px;
+    text-align: center;
+    background: rgba(5, 5, 5, 0);
+}
+
+h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: 3rem;
+    background: linear-gradient(90deg, #8A2BE2, #FF416C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.login-container {
+    padding: 40px 20px;
+    max-width: 400px;
+    margin: 20px auto;
+    background: rgba(17, 17, 17, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.login-container input {
+    width: 90%;
+    padding: 13px 7px;
+    margin: 12px 0;
+    border: 1px solid #444;
+    border-radius: 8px;
+    font-size: 1em;
+    font-family: 'Sour Gummy', cursive;
+    background-color: rgba(34, 34, 34, 0.2);
+    color: #cbcbcb;
+    outline: none;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+.login-container input:focus {
+    border: 1px solid #8A2BE2;
+    box-shadow: 0 0 8px rgba(138, 43, 226, 0.5);
+    background-color: rgba(50, 50, 50, 0.5);
+}
+
+.login-container button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 30px;
+    background: linear-gradient(90deg, #8A2BE2, #FF416C);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.login-container button:hover {
+    background: linear-gradient(90deg, #4B0082, #FF416C);
+    transform: scale(1.05);
+}
+
+.login-container input:-webkit-autofill {
+    background-color: rgba(34, 34, 34, 0.2) !important;
+    color: rgba(50, 50, 50, 0.5) !important;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(34, 34, 34, 0.2) inset !important;
+    box-shadow: 0 0 0px 1000px rgba(34, 34, 34, 0.2) inset !important;
+    font-family: 'Sour Gummy', cursive;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    background-color: #0a0a0a;
+    font-size: 0.9rem;
+    color: #cbcbcb;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    header {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .login-container {
+        padding: 30px 15px;
+        max-width: 90%; /* Adjust width for smaller screens */
+    }
+
+    .login-container input {
+        padding: 10px 5px;
+        font-size: 0.9em;
+    }
+
+    .login-container button {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+
+    footer {
+        font-size: 0.8rem;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Login</h1>
+    </header>
+    <div class="blurry-balls">
+        <div class="blurry-ball"></div>
+        <div class="blurry-ball"></div>
+        <div class="blurry-ball"></div>
+    </div>
+    <div class="login-container">
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+            <p style="margin-top: 15px; font-size: 0.9rem; color: #cbcbcb;">
+                Don't have an account? <a href="/templates/signup.html" style="color: #8A2BE2; text-decoration: none;">Sign up
+                    here</a>
+            </p>
+        </form>
+    </div>
+    <div class="blurry-balls">
+        <div class="blurry-ball"></div>
+        <div class="blurry-ball"></div>
+        <div class="blurry-ball"></div>
+    </div>
+    
+</body>
+
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Sour+Gummy&display=swap" rel="stylesheet">
+    <style>
+        .blurry-balls {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .blurry-ball {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 0, 0, 1), transparent);
+            border-radius: 50%;
+            filter: blur(65px);
+            animation: pulse 5s infinite ease-in-out;
+        }
+
+        .blurry-ball:nth-child(1) {
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.9), transparent);
+            /* Violet */
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .blurry-ball:nth-child(2) {
+            background: radial-gradient(circle, rgba(255, 69, 0, 0.9), transparent);
+            /* Red */
+            top: 35%;
+            left: 70%;
+            animation-delay: 2s;
+        }
+
+        .blurry-ball:nth-child(3) {
+            background: radial-gradient(circle, rgba(255, 0, 255, 0.6), transparent);
+            /* Bluish Red */
+            top: 80%;
+            left: 30%;
+            animation-delay: 4s;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: 0.4;
+            }
+        }
+
+        body {
+            background-color: #050505;
+            color: #cbcbcb;
+            font-family: 'Sour Gummy', cursive;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            padding: 20px 10px 0px;
+            text-align: center;
+            background: rgba(5, 5, 5, 0);
+            /* Semi-transparent black */
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3rem;
+            background: linear-gradient(90deg, #8A2BE2, #FF416C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .signin-container {
+            padding: 40px 30px;
+            max-width: 400px;
+            margin: 25px auto;
+            background: rgba(17, 17, 17, 0.3);
+            /* Reduced opacity for clearer blur */
+            backdrop-filter: blur(15px);
+            /* Realistic blur */
+            -webkit-backdrop-filter: blur(15px);
+            /* For Safari */
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .signin-container input {
+            width: 90%;
+            padding: 13px 7px;
+            /* Increased padding for better aesthetics */
+            margin: 10px 4px;
+            /* Adjusted margin for spacing */
+            border: 1px solid #444;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Sour Gummy', cursive;
+            /* Applied the same font */
+            background-color: rgba(34, 34, 34, 0.4);
+            /* Slightly transparent background */
+            color: #cbcbcb;
+            outline: none;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        .signin-container input:focus {
+            border: 1px solid #8A2BE2;
+            /* Violet border on focus */
+            box-shadow: 0 0 8px rgba(138, 43, 226, 0.5);
+            /* Glow effect */
+            background-color: rgba(50, 50, 50, 0.5);
+            /* Slightly darker background on focus */
+        }
+
+        .signin-container button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(90deg, #8A2BE2, #FF416C);
+            color: #fff;
+            border-radius: 30px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .signin-container button:hover {
+            background: linear-gradient(90deg, #4B0082, #FF416C);
+            transform: scale(1.05);
+        }
+
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background-color: #0a0a0a;
+            font-size: 0.9rem;
+            color: #cbcbcb;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Sign Up</h1>
+    </header>
+    <div class="blurry-balls">
+        <div class="blurry-ball"></div>
+        <div class="blurry-ball"></div>
+        <div class="blurry-ball"></div>
+    </div>
+    <div class="signin-container">
+        <form action="/signin" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required> <!-- Added email field -->
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Sign Up</button>
+            <p style="margin-top: 15px; font-size: 0.9rem; color: #cbcbcb;">
+                Already have an account? <a href="/templates/login.html" style="color: #8A2BE2; text-decoration: none;">Click here</a>
+            </p>
+        </form>
+    </div>
+    
+</body>
+
+</html>
