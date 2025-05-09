@@ -179,7 +179,7 @@
 
     <!-- Side Menu -->
     <div class="side-menu" id="sideMenu">
-        <h2>Profile</h2>
+        <h2>Profile</h>
         <a href="/home">Home</a>
         <a href="/view-profile">View Profile</a>
         <a href="/settings">Settings</a>
@@ -201,7 +201,18 @@
             const menu = document.getElementById('sideMenu');
             menu.classList.toggle('open');
         }
-    
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options = {}) {
+            const token = localStorage.getItem('token');
+            if (token) {
+                options.headers = options.headers || {};
+                options.headers = {
+                    ...options.headers,
+                    'Authorization': `Bearer ${token}`
+                };
+            }
+            return originalFetch(url, options);
+        };
     </script>
 </body>
 </html>

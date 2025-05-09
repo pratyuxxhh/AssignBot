@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 
 <head>
@@ -9,230 +11,294 @@
     <link href="https://fonts.googleapis.com/css2?family=Meow+Script&display=swap" rel="stylesheet">
     <style>
         /* Blurry Balls */
-.blurry-balls {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: -1; /* Place behind all other content */
-}
+        .blurry-balls {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            /* Place behind all other content */
+        }
 
-.blurry-ball {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    background: linear-gradient(90deg, #8A2BE2, #FF416C);
-    border-radius: 50%;
-    filter: blur(100px);
-    animation: moveBalls 10s infinite ease-in-out;
-}
+        .blurry-ball {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(90deg, #8A2BE2, #FF416C);
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: moveBalls 10s infinite ease-in-out;
+        }
 
-.blurry-ball:nth-child(1) {
-    top: 10%;
-    left: 20%;
-    animation-delay: 0s;
-}
+        .blurry-ball:nth-child(1) {
+            top: 10%;
+            left: 20%;
+            animation-delay: 0s;
+        }
 
-.blurry-ball:nth-child(2) {
-    top: 50%;
-    left: 70%;
-    animation-delay: 2s;
-}
+        .blurry-ball:nth-child(2) {
+            top: 50%;
+            left: 70%;
+            animation-delay: 2s;
+        }
 
-.blurry-ball:nth-child(3) {
-    top: 80%;
-    left: 30%;
-    animation-delay: 4s;
-}
+        .blurry-ball:nth-child(3) {
+            top: 80%;
+            left: 30%;
+            animation-delay: 4s;
+        }
 
-@keyframes moveBalls {
-    0%, 100% {
-        transform: translate(0, 0);
-    }
-    50% {
-        transform: translate(50px, -50px);
-    }
-}
-body {
-    margin: 0;
-    font-family: 'Sour Gummy', cursive;
-    background-color: #050505;
-    color: #cbcbcb;
-}
+        @keyframes moveBalls {
 
-header {
-    padding: 20px;
-    text-align: center;
-    background: linear-gradient(90deg, #8A2BE2, #FF416C);
-    color: #fff;
-    font-size: 2rem;
-    position: relative;
-    z-index: 1000; /* Ensure the header stays on top */
-}
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
 
-/* Center Quote */
-.center-quote {
-    font-family: 'Meow Script', cursive;
-    font-size: 4rem; /* Large font size */
-    color: #FF416C;
-    text-align: center;
-    margin: 20px 0; /* Add spacing below the header */
-}
+            50% {
+                transform: translate(50px, -50px);
+            }
+        }
 
-/* Navigation Bar at the Bottom */
-nav {
-    margin-top: 20px; /* Add spacing below the header */
-    position: relative;
-    z-index: 1; 
-    bottom: 10%; /* Move to the bottom */
-    left: 50%;
-    transform: translateX(-50%);
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns */
-    gap: 20px; /* Spacing between cards */
-    justify-items: center; /* Center cards horizontally */
-}
+        body {
+            margin: 0;
+            font-family: 'Sour Gummy', cursive;
+            background-color: #050505;
+            color: #cbcbcb;
+        }
 
-nav a {
-    display: block;
-    text-align: center;
-    text-decoration: none;
-    color: #fff;
-    font-size: 2rem; /* Larger font size */
-    font-weight: bold;
-    backdrop-filter: blur(10px); 
-    background: rgba(17, 17, 17, 0.6);
-    padding: 30px; /* Increased padding for larger cards */
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 200px; /* Larger width for cards */
-}
+        header {
+            padding: 10px;
+            text-align: center;
+            background: linear-gradient(90deg, #8A2BE2, #FF416C);
+            color: #fff;
+            font-size: 2rem;
+            position: relative;
+            z-index: 1000;
+            /* Ensure the header stays on top */
+        }
 
-nav a span {
-    display: block;
-    font-size: 1rem; /* Smaller font size for the random line */
-    font-weight: normal;
-    margin-top: 10px;
-    color: #cbcbcb; /* Lighter color for the random line */
-}
+        /* Center Quote */
+        .center-quote {
+            font-family: 'Meow Script', cursive;
+            font-size: 4rem;
+            /* Large font size */
+            color: #FF416C;
+            text-align: center;
+            margin: 20px 0;
+            /* Add spacing below the header */
+        }
 
-nav a:hover {
-    transform: translateY(-5px); /* Lift effect on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
-}
+        /* Navigation Bar at the Bottom */
+        nav {
+            margin-top: 20px;
+            /* Add spacing below the header */
+            position: relative;
+            z-index: 1;
+            bottom: 10%;
+            /* Move to the bottom */
+            left: 50%;
+            transform: translateX(-50%);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* 2 columns */
+            gap: 20px;
+            /* Spacing between cards */
+            justify-items: center;
+            /* Center cards horizontally */
+        }
 
-/* Side Menu */
-.side-menu {
-    position: fixed;
-    top: 0;
-    left: -250px; /* Hidden by default */
-    width: 250px;
-    height: 100%;
-    background: rgba(17, 17, 17, 0.9); /* Semi-transparent black */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-    transition: left 0.3s ease; /* Smooth slide-in effect */
-    z-index: 1000;
-    padding: 20px;
-}
+        nav a {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            font-size: 2rem;
+            /* Larger font size */
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            background: rgba(17, 17, 17, 0.6);
+            padding: 30px;
+            /* Increased padding for larger cards */
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 200px;
+            /* Larger width for cards */
+        }
 
-.side-menu.open {
-    left: 0; /* Slide in when open */
-}
+        nav a span {
+            display: block;
+            font-size: 1rem;
+            /* Smaller font size for the random line */
+            font-weight: normal;
+            margin-top: 10px;
+            color: #cbcbcb;
+            /* Lighter color for the random line */
+        }
 
-.side-menu h2 {
-    color: #fff;
-    margin-top: 40px;
-    margin-bottom: 60px;
-}
+        nav a:hover {
+            transform: translateY(-5px);
+            /* Lift effect on hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+        }
 
-.side-menu a {
-    display: block;
-    color: #8A2BE2;
-    text-decoration: none;
-    margin: 10px 0;
-    font-size: 1.2rem;
-}
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            /* Hidden by default */
+            width: 250px;
+            height: 100%;
+            background: rgba(17, 17, 17, 0.9);
+            /* Semi-transparent black */
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            transition: left 0.3s ease;
+            /* Smooth slide-in effect */
+            z-index: 1000;
+            padding: 20px;
+        }
 
-.side-menu a:hover {
-    text-decoration: underline;
-}
+        .side-menu.open {
+            left: 0;
+            /* Slide in when open */
+        }
 
-.menu-toggle {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background: #8A2BE2;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    z-index: 1100;
-}
+        .side-menu h2 {
+            color: #fff;
+            margin-top: 40px;
+            margin-bottom: 60px;
+        }
 
-/* Content */
-.content {
-    padding: 60px 20px;
-    text-align: center;
-    margin-top: 20px; /* Add spacing below the header */
-}
+        .side-menu a {
+            display: block;
+            color: #8A2BE2;
+            text-decoration: none;
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
 
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-    header {
-        font-size: 1.5rem; /* Smaller font size for header */
-        padding: 15px;
-    }
+        .side-menu a:hover {
+            text-decoration: underline;
+        }
 
-    .center-quote {
-        font-size: 2.5rem; /* Adjust font size for smaller screens */
-        margin: 10px 0; /* Adjust spacing below the header */
-    }
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #8A2BE2;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 1100;
+        }
 
-    nav {
-        display: flex;
-        flex-direction: column; /* Stack links vertically */
-        gap: 20px; /* Add spacing between cards */
-        align-items: center; /* Center the cards horizontally */
-        margin-top: 20px;
-    }
+        /* Content */
+        .content {
+            padding: 60px 20px;
+            text-align: center;
+            margin-top: 20px;
+            /* Add spacing below the header */
+        }
 
-    nav a {
-        font-size: 1.2rem; /* Adjust font size for links */
-        width: 90%; /* Make cards take up most of the screen width */
-        padding: 20px; /* Adjust padding for smaller screens */
-    }
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            header {
+                font-size: 1.5rem;
+                /* Smaller font size for header */
+                padding: 15px;
+            }
 
-    .menu-toggle {
-        top: 10px;
-        left: 10px;
-        padding: 8px 12px;
-    }
+            .center-quote {
+                font-size: 2.5rem;
+                /* Adjust font size for smaller screens */
+                margin: 10px 0;
+                /* Adjust spacing below the header */
+            }
 
-    .side-menu {
-        width: 200px; /* Narrower side menu */
-    }
+            nav {
+                display: flex;
+                flex-direction: column;
+                /* Stack links vertically */
+                gap: 20px;
+                /* Add spacing between cards */
+                align-items: center;
+                /* Center the cards horizontally */
+                margin-top: 20px;
+            }
 
-    .side-menu a {
-        font-size: 1rem; /* Smaller font size for side menu links */
-    }
+            nav a {
+                font-size: 1.2rem;
+                /* Adjust font size for links */
+                width: 70%;
+                /* Make cards take up most of the screen width */
+                padding: 20px;
+                /* Adjust padding for smaller screens */
+            }
 
-    .content {
-        padding: 30px 10px; /* Adjust padding for smaller screens */
-    }
-}
+            .menu-toggle {
+                top: 10px;
+                left: 10px;
+                padding: 8px 12px;
+            }
+
+            .side-menu {
+                width: 200px;
+                /* Narrower side menu */
+            }
+
+            .side-menu a {
+                font-size: 1rem;
+                /* Smaller font size for side menu links */
+            }
+
+            .content {
+                padding: 30px 10px;
+                /* Adjust padding for smaller screens */
+            }
+        }
+
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+        }
     </style>
 </head>
 
 <body>
-    <header>
-        Welcome to AssignBot
+    <div class="blurry-balls">
+        <div class="blurry-ball"></div>
+        <div class="blurry-ball"></div>
+        <div class="blurry-ball"></div>
+    </div>
 
+    <header>
+        <h1>Welcome to AssignBot</h1>
     </header>
-    <p class="center-quote">
+    <p id="welcomeMessage" class="center-quote">
         You say it. We solve it.
     </p>
     <nav>
@@ -259,11 +325,12 @@ nav a:hover {
     <div class="side-menu" id="sideMenu">
         <h2>Profile</h2>
         <a href="/home">Home</a>
-        <a href="/view-profile">View Profile</a>
+        <a href="/view-profile" onclick="viewProfile()">View Profile</a>
         <a href="/settings">Settings</a>
-        <a href="/logout">Logout</a>
+        <a href="/logout" onclick="logout()">Logout</a>
         <a href="/feedback">Feedback</a>
     </div>
+    <div id="toast">This is a notification</div>
     <div class="content">
 
     </div>
@@ -273,10 +340,45 @@ nav a:hover {
         <div class="blurry-ball"></div>
     </div>
     <script>
+        // Check if we have a token on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // No token found, redirect to login
+                window.location.href = '/login';
+            }
+        });
+
+        // Logout function
+        function logout() {
+            // Remove token from localStorage
+            localStorage.removeItem('token');
+            // Redirect to login page
+            window.location.href = 'localhost:8080/login';
+        }
+
+        // Add token to all fetch/ajax requests
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options = {}) {
+            const token = localStorage.getItem('token');
+            console.log("Token:", token); // Debugging line to check the token value
+            
+            if (token) {
+                options.headers = options.headers || {};
+                options.headers = {
+                    ...options.headers,
+                    'Authorization': `Bearer ${token}`
+                };
+            }
+            return originalFetch(url, options);
+        };
+
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             menu.classList.toggle('open');
         }
+
+        
     </script>
 </body>
 

@@ -7,6 +7,29 @@
     <title>Settings</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Sour+Gummy&display=swap" rel="stylesheet">
     <style>
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+        }
+
         /* Blurry Balls */
         .blurry-balls {
             position: fixed;
@@ -123,11 +146,12 @@
 
         form button {
             display: block;
-            width: 100%;
+            width: 50%;
             padding: 10px;
             background: linear-gradient(90deg, #8A2BE2, #FF416C);
             color: #fff;
             border: none;
+            transform: translateX(50%);
             border-radius: 6px;
             font-size: 1rem;
             cursor: pointer;
@@ -189,6 +213,96 @@
             border-radius: 5px;
             z-index: 1100;
         }
+
+        /* Style the delete account button */
+        .delete-account-form {
+            position: relative;
+            bottom: 20px;
+            /* Distance from the bottom */
+            left: 50%;
+            /* Center horizontally */
+            transform: translateX(70%);
+            /* Adjust for centering */
+            text-align: center;
+        }
+
+        /* Style the delete account button */
+        .delete-account-btn {
+            background: #FF416C;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transform: translateX(0%);
+            width: 150px;
+            transition: background 0.3s ease;
+        }
+
+        .delete-account-btn:hover {
+            background: #E63950;
+            /* Slightly darker shade on hover */
+        }
+        .custom-confirm {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .custom-confirm-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        width: 90%;
+    }
+
+    .custom-confirm-content p {
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+    .custom-confirm-actions {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .confirm-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .confirm-btn:first-child {
+        background: #FF416C;
+        color: #fff;
+    }
+
+    .confirm-btn:last-child {
+        background: #ccc;
+        color: #333;
+    }
+
+    .confirm-btn:first-child:hover {
+        background: #E63950;
+    }
+
+    .confirm-btn:last-child:hover {
+        background: #bbb;
+    }
     </style>
 </head>
 
@@ -204,53 +318,245 @@
         <a href="/settings">Settings</a>
         <a href="/logout">Logout</a>
     </div>
-
+    <div id="toast">This is a notification</div>
     <div class="settings-container">
-        <!-- Profile Photo Section -->
-        <div class="profile-photo" style="background-image: url('profile-photo.jpg');"></div>
-        <input type="file" accept="image/*" />
 
         <!-- Edit User Details Form -->
-        <form action="/update-profile" method="POST">
+        <form id="updateUserForm" onsubmit="event.preventDefault(); updateUser();">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Enter your name" value="[User Name]" required>
-
+            <input type="text" id="name" name="name" placeholder="Enter your name" value="[User Name]" required readonly>
+        
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your new password , if you want to change" >
+        
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email" value="user@example.com"
-                required>
-
+            <input type="email" id="email" name="email" placeholder="Enter your email" value="user@example.com" required>
+        
             <label for="phone">Phone</label>
-            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="+123 456 7890"
-                required>
-
+            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="+123 456 7890" required>
+        
             <label for="address">Address</label>
-            <textarea id="address" name="address" placeholder="Enter your address"
-                rows="3">123 Main Street, City, Country</textarea>
-
+            <textarea id="address" name="address" placeholder="Enter your address" rows="3">123 Main Street, City, Country</textarea>
+        
             <label for="description">Change Description</label>
-            <textarea id="description" name="description" placeholder="Describe the changes you want to make"
-                rows="4"></textarea>
-
+            <textarea id="description" name="description" placeholder="Describe the changes you want to make" rows="4"></textarea>
+        
             <button type="submit">Save Changes</button>
         </form>
     </div>
-    <form action="/delete-account" method="POST" style="margin-top: 20px;">
-        <button type="submit"
-            style="background: #FF416C; color: #fff; border: none; padding: 10px; border-radius: 6px; font-size: 1rem; cursor: pointer; width: 100%;">
-            Delete Account
-        </button>
-    </form>
+
+    <button type="submit" class="delete-account-btn" onclick="deleteAccount()">
+        Delete Account
+    </button>
+
     <div class="blurry-balls">
         <div class="blurry-ball"></div>
         <div class="blurry-ball"></div>
         <div class="blurry-ball"></div>
     </div>
+    <div id="customConfirm" class="custom-confirm">
+    <div class="custom-confirm-content">
+        <p id="confirmMessage">Are you sure you want to delete your account? This action cannot be undone.</p>
+        <div class="custom-confirm-actions">
+            <button id="confirmYes" class="confirm-btn">Yes</button>
+            <button id="confirmNo" class="confirm-btn">No</button>
+        </div>
+    </div>
+</div>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const userData = JSON.parse(localStorage.getItem('userData')); // Retrieve userData from localStorage
+
+        if (!token) {
+            alert("You need to log in to access this page.");
+            window.location.href = '/login'; // Redirect to login page
+            return;
+        }
+
+        if (userData) {
+            // Populate the form fields with userData
+            document.getElementById('name').value = userData.username || '';
+            document.getElementById('email').value = userData.email || '';
+            document.getElementById('phone').value = userData.phone || '';
+            document.getElementById('address').value = userData.address || '';
+            document.getElementById('description').value = userData.description || '';
+        } else {
+            console.warn("No user data found in localStorage.");
+        }
+    });
         // Script to toggle the side menu
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             menu.classList.toggle('open');
         }
+        const originalFetch = window.fetch;
+        window.fetch = function (url, options = {}) {
+            const token = localStorage.getItem('token');
+            if (token) {
+                options.headers = options.headers || {};
+                options.headers = {
+                    ...options.headers,
+                    'Authorization': `Bearer ${token}`
+                };
+            }
+            return originalFetch(url, options);
+        };
+
+        function deleteAccount() {
+        showCustomConfirm("Are you sure you want to delete your account? This action cannot be undone.", function () {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                showToast("You need to log in first.");
+                return;
+            }
+
+            fetch('/delete-user', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // Include token if required
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        showToast("Account deleted successfully.");
+                        // Redirect to login or home page
+                        logout();
+                    } else {
+                        // Handle different status codes
+                        if (response.status === 403) {
+                            showToast("You are not authorized to delete this account.");
+                        } else if (response.status === 404) {
+                            showToast("Account not found.");
+                        } else {
+                            showToast("Failed to delete account. Please try again.");
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("An error occurred. Please try again.");
+                });
+        });
+    }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'show';
+            setTimeout(() => {
+                toast.className = toast.className.replace('show', '');
+            }, 3000);
+        }
+
+        function logout() {
+            // Optionally make a request to the backend to log the user out (invalidate session or blacklist JWT)
+            fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then(response => {
+                // Handle server-side logout, e.g., invalidate the token or session.
+                if (response.ok) {
+                    // Remove token from localStorage
+                    window.location.href = '/login';
+                    localStorage.removeItem('token');
+                    // Redirect to login page
+                    
+                } else {
+                    window.location.href = '/login';
+                    console.error('Error logging out on the server');
+                }
+            }).catch(error => {
+                console.error('Logout error:', error);
+                // Remove token and redirect even if the server request fails
+                window.location.href = '/login';
+                localStorage.removeItem('token');
+                
+            });
+        }
+        function updateUser() {
+        const username = document.getElementById('name').value;
+        let password = document.getElementById('password').value;
+        // Only include password if it's not empty
+        if (password === '') {
+            password = undefined; // Set to undefined if empty
+        }
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('address').value;
+        const description = document.getElementById('description').value;
+
+        const payload = {
+            username: username,
+            password: password,
+            email: email,
+            phone: phone,
+            address: address,
+            description: description
+        };
+
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+
+        if (!token) {
+            showToast("You need to log in first.");
+            return;
+        }
+
+        fetch('/update-user', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+            },
+            body: JSON.stringify(payload) // Send the payload as JSON
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/login'; // Redirect to the profile page
+                showToast("User details updated successfully.");
+            } else {
+                if (response.status === 403) {
+                    showToast("You are not authorized to update this account.");
+                } else if (response.status === 404) {
+                    showToast("Account not found.");
+                } else {
+                    showToast("Failed to update account. Please try again.");
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            showToast("An error occurred. Please try again.");
+        });
+    }
+ function showCustomConfirm(message, onConfirm) {
+        const customConfirm = document.getElementById('customConfirm');
+        const confirmMessage = document.getElementById('confirmMessage');
+        const confirmYes = document.getElementById('confirmYes');
+        const confirmNo = document.getElementById('confirmNo');
+
+        // Set the confirmation message
+        confirmMessage.textContent = message;
+
+        // Show the confirmation box
+        customConfirm.style.display = 'flex';
+
+        // Handle Yes button click
+        confirmYes.onclick = function () {
+            customConfirm.style.display = 'none'; // Hide the confirmation box
+            onConfirm(); // Execute the callback function
+        };
+
+        // Handle No button click
+        confirmNo.onclick = function () {
+            customConfirm.style.display = 'none'; // Hide the confirmation box
+        };
+    }
+
     </script>
 </body>
 

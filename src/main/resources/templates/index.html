@@ -7,10 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Sour+Gummy&display=swap" rel="stylesheet">
     <style>
         .btn:hover {
-    background: linear-gradient(90deg, #4B0082, #FF416C); /* More bluish tone */
-    transform: scale(1.05); /* Slight zoom effect */
-    transition: background 0.3s ease, transform 0.3s ease;
-}
+            background: linear-gradient(90deg, #4B0082, #FF416C); /* More bluish tone */
+            transform: scale(1.05); /* Slight zoom effect */
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+    
         .blurry-balls {
             position: fixed;
             top: 0;
@@ -20,7 +21,7 @@
             overflow: hidden;
             z-index: -1;
         }
-
+    
         .blurry-ball {
             position: absolute;
             width: 200px;
@@ -30,7 +31,7 @@
             filter: blur(100px);
             animation: pulse 10s infinite ease-in-out;
         }
-
+    
         .blurry-ball:nth-child(1) {
             background: radial-gradient(circle, rgba(138, 43, 226, 0.9), transparent);
             /* Violet */
@@ -38,7 +39,7 @@
             left: 10%;
             animation-delay: 0s;
         }
-
+    
         .blurry-ball:nth-child(2) {
             background: radial-gradient(circle, rgba(255, 69, 0, 0.9), transparent);
             /* Red */
@@ -46,7 +47,7 @@
             left: 70%;
             animation-delay: 2s;
         }
-
+    
         .blurry-ball:nth-child(3) {
             background: radial-gradient(circle, rgba(255, 0, 255, 0.6), transparent);
             /* Bluish Red */
@@ -54,40 +55,39 @@
             left: 30%;
             animation-delay: 4s;
         }
-
+    
         @keyframes pulse {
-
             0%,
             100% {
                 transform: scale(1);
                 opacity: 0.8;
             }
-
+    
             50% {
                 transform: scale(1.5);
                 opacity: 0.4;
             }
         }
-
+    
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+    
         body {
             background-color: #050505;
             color: #cbcbcb;
             font-family: 'Sour Gummy', cursive;
         }
-
+    
         header {
             padding: 80px 20px 40px;
             text-align: center;
             background: rgba(5, 5, 5, 0);
             /* Semi-transparent black */
         }
-
+    
         h1 {
             font-family: 'Pacifico', cursive;
             font-size: 3rem;
@@ -95,13 +95,13 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
+    
         p.subtext {
             margin-top: 10px;
             font-size: 1.2rem;
             color: #cbcbcb;
         }
-
+    
         .btn {
             display: inline-block;
             margin-top: 30px;
@@ -112,45 +112,114 @@
             border-radius: 30px;
             font-weight: bold;
         }
-
+    
         section {
             padding: 60px 20px;
             max-width: 1000px;
             margin: auto;
         }
-
+    
         .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
+        display: grid;
+        grid-template-columns: 1fr; /* Single column by default */
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    @media (min-width: 768px) {
+        .features {
+            grid-template-columns: repeat(3, 1fr); /* Three columns for larger screens */
         }
+    }
 
-        .feature-box {
-            background-color: #111;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
+    .feature-box {
+        background-color: #111;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
 
-        .feature-box:hover {
-            transform: translateY(-5px);
-        }
-
+    .feature-box:hover {
+        transform: translateY(-5px);
+    }
+    
         footer {
             text-align: center;
             padding: 30px;
             background-color: #0a0a0a;
             font-size: 0.9rem;
         }
-
+    
         .section-title,
         .feature-box h3 {
             font-family: 'Pacifico', cursive;
             background: linear-gradient(90deg, #8A2BE2, #FF416C);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+    
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            header {
+                padding: 40px 10px 20px;
+            }
+    
+            h1 {
+                font-size: 2rem;
+            }
+    
+            p.subtext {
+                font-size: 1rem;
+            }
+    
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+    
+            section {
+                padding: 40px 10px;
+            }
+    
+            .features {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+    
+            .feature-box {
+    padding: 20px;
+    max-width: 80%;
+    margin: 0 auto; /* Centers the feature box horizontally */
+    text-align: center; /* Ensures text inside is centered */
+}
+    
+            footer {
+                font-size: 0.8rem;
+            }
+        }
+    
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+    
+            p.subtext {
+                font-size: 0.9rem;
+            }
+    
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+    
+            .feature-box {
+                padding: 15px;
+            }
+    
+            footer {
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>

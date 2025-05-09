@@ -7,6 +7,28 @@
     <title>Sign In</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Sour+Gummy&display=swap" rel="stylesheet">
     <style>
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
         .blurry-balls {
             position: fixed;
             top: 0;
@@ -168,18 +190,82 @@
         <div class="blurry-ball"></div>
         <div class="blurry-ball"></div>
     </div>
+    <div id="toast">This is a notification</div>
     <div class="signin-container">
-        <form action="/signin" method="POST">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="email" name="email" placeholder="Email" required> <!-- Added email field -->
-            <input type="password" name="password" placeholder="Password" required>
+        <form id="signupForm">
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
             <button type="submit">Sign Up</button>
             <p style="margin-top: 15px; font-size: 0.9rem; color: #cbcbcb;">
                 Already have an account? <a href="/login" style="color: #8A2BE2; text-decoration: none;">Click here</a>
             </p>
         </form>
     </div>
-    
+
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Collect form data
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Create the POST request payload
+            const payload = {
+                username: username,
+                email: email,
+                password: password,
+                feedback: [],
+                description: "",
+                phoneno: "",
+                address: ""
+            };
+
+            try {
+                // Send the POST request
+                const response = await fetch('/save-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    // Check if the response has a body
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        const result = await response.json();
+                        showToast("SignUp successfully!");
+
+                        console.log(result); // Log the response for debugging
+                    } else {
+                        showToast("SignUp successfully!");
+
+                    }
+                } else {
+                    showToast("User Already exists!");
+
+                    console.error('Error:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.className = "show";
+            setTimeout(() => {
+                toast.className = toast.className.replace("show", "");
+            }, 3000);
+        }
+    </script>
 </body>
 
 </html>
