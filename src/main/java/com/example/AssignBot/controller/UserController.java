@@ -1,6 +1,8 @@
 package com.example.AssignBot.controller;
 
+import com.example.AssignBot.entities.FeedbackPOJO;
 import com.example.AssignBot.entities.UserPOJO;
+import com.example.AssignBot.services.FeedBackService;
 import com.example.AssignBot.services.UserServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +15,14 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
 
+    @Autowired
+    private FeedBackService feedBackService;
     @Autowired
     private AuthenticationManager authenticationManager;
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -90,6 +95,28 @@ public class UserController {
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+    @PostMapping("/post-api-key")
+    public ResponseEntity<?> postApikey(@RequestBody String apikey){
+            Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+            try {
+                UserPOJO user = userServices.getuserByUserName(authentication.getName());
+                user.setApikey(apikey);
+                userServices.saveThisUser(user);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            catch (Exception e){
+                return new ResponseEntity<>(HttpStatusCode.valueOf(401));
+            }
+    }
+    @PostMapping("/feedback")
+    public ResponseEntity<?> feedback(@RequestBody FeedbackPOJO message){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPOJO user = userServices.getuserByUserName(auth.getName());
+        message.setSender(user.getUsername());
+        message.setMessage(message.getMessage());
+        feedBackService.saveFeedBack(message);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

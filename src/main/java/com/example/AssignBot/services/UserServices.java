@@ -29,7 +29,6 @@ public class UserServices {
     }
     public String encodePassword(String pass){
         pass = userDetailServices.passwordEncoder().encode(pass);
-        log.info(pass);
         return pass;
     }
 

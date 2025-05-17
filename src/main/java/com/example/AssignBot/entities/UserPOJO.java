@@ -14,6 +14,15 @@ public class UserPOJO {
     private String phone="";
     private String address="";
     private String description="";
+    private  String apikey="";
+
+    public String getApikey() {
+        return apikey;
+    }
+
+    public void setApikey(String apikey) {
+        this.apikey = apikey;
+    }
 
     public ObjectId getId() {
         return id;

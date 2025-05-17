@@ -33,7 +33,7 @@ public class SecurityConfigs {
 
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/save-user","/favicon.ico","/signup","/", "/authenticate", "/login", "/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
+                        .requestMatchers("/ai/ask-ai/**","/ai/mcq-generator","/ai/study-hacks","/save-user","/favicon.ico","/signup","/", "/authenticate", "/login", "/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

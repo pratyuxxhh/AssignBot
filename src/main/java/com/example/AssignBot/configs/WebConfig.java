@@ -1,5 +1,6 @@
 package com.example.AssignBot.configs;
 
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -22,6 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
         // Add message converters if needed
         return restTemplate;
     }
+
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

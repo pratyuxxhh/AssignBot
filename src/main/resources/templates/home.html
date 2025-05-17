@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 
@@ -263,27 +262,56 @@
             }
         }
 
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 16px;
+        /* Updated Toast styles to match previous implementation */
+        .toast {
             position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .toast-icon {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .toast-error {
+            background-color: #f44336;
         }
 
-        #toast.show {
-            visibility: visible;
-            opacity: 1;
-            transform: translateX(-50%) translateY(-10px);
+        #generateApiKey {
+            background: linear-gradient(90deg, #8A2BE2, #FF416C);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #generateApiKey:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
         }
     </style>
 </head>
@@ -301,6 +329,18 @@
     <p id="welcomeMessage" class="center-quote">
         You say it. We solve it.
     </p>
+    <p class="center-quote" style="font-size: 1.5rem; color: #cbcbcb; text-align: center; margin-top: 10px;">
+        Please generate the api-key first for smoother performance by clicking the button.
+    </p>
+    <button id="generateApiKey" onclick="generateApiKey()">Generate API Key</button>
+    <div style="text-align: center; margin-top: 20px;">
+        <input type="text" id="apiKeyInput" placeholder="Paste your API key here"
+            style="padding: 10px; width: 300px; border-radius: 8px; border: 1px solid #8A2BE2; font-size: 1rem;">
+        <button onclick="submitApiKey();"
+            style="margin-left: 10px; background: #8A2BE2; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">
+            Submit
+        </button>
+    </div>
     <nav>
         <a href="/ask-ai">
             Ask AI
@@ -330,7 +370,13 @@
         <a href="/logout" onclick="logout()">Logout</a>
         <a href="/feedback">Feedback</a>
     </div>
-    <div id="toast">This is a notification</div>
+    
+    <!-- Updated toast notification element to match previous implementation -->
+    <div id="toast" class="toast">
+        <span class="toast-icon">✓</span>
+        <span id="toastMessage">This is a notification</span>
+    </div>
+    
     <div class="content">
 
     </div>
@@ -341,11 +387,11 @@
     </div>
     <script>
         // Check if we have a token on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const token = localStorage.getItem('token');
             if (!token) {
                 // No token found, redirect to login
-                window.location.href = '/login';
+                // window.location.href = '/login';
             }
         });
 
@@ -359,10 +405,9 @@
 
         // Add token to all fetch/ajax requests
         const originalFetch = window.fetch;
-        window.fetch = function(url, options = {}) {
+        window.fetch = function (url, options = {}) {
             const token = localStorage.getItem('token');
-            console.log("Token:", token); // Debugging line to check the token value
-            
+
             if (token) {
                 options.headers = options.headers || {};
                 options.headers = {
@@ -377,8 +422,61 @@
             const menu = document.getElementById('sideMenu');
             menu.classList.toggle('open');
         }
-
         
+        function generateApiKey() {
+            window.location.href = 'https://openrouter.ai/settings/keys';
+        }
+
+        function submitApiKey() {
+            const apiKey = document.getElementById('apiKeyInput').value;
+            if (!apiKey) {
+                showToast("API Key cannot be empty", true);
+                return;
+            }
+
+            fetch('/post-api-key', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: apiKey
+            })
+            .then(response => {
+                if (response.ok) {
+                    showToast("API Key saved successfully!");
+                } else {
+                    showToast("Failed to save API Key.", true);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast("API Key saved successfully!");
+            });
+        }
+        
+        // Updated showToast function to match previous implementation
+        function showToast(message, isError = false) {
+            const toast = document.getElementById("toast");
+            const toastMessage = document.getElementById("toastMessage");
+            const toastIcon = document.querySelector(".toast-icon");
+            
+            if (isError) {
+                toast.classList.add("toast-error");
+                
+            } else {
+                toast.classList.remove("toast-error");
+                
+            }
+            
+            toastMessage.textContent = message;
+            toast.classList.add("show");
+            
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
     </script>
 </body>
 

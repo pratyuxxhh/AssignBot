@@ -7,29 +7,37 @@
     <title>Settings</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Sour+Gummy&display=swap" rel="stylesheet">
     <style>
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 16px;
+        .toast {
             position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 1000;
+            pointer-events: none;
         }
-
-        #toast.show {
-            visibility: visible;
+        
+        .toast.show {
             opacity: 1;
-            transform: translateX(-50%) translateY(-10px);
+            transform: translateY(0);
         }
-
+        
+        .toast-icon {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .toast-error {
+            background-color: #f44336;
+        }
         /* Blurry Balls */
         .blurry-balls {
             position: fixed;
@@ -318,7 +326,10 @@
         <a href="/settings">Settings</a>
         <a href="/logout">Logout</a>
     </div>
-    <div id="toast">This is a notification</div>
+    <div id="toast" class="toast">
+        <span class="toast-icon">✓</span>
+        <span id="toastMessage">Feedback submitted successfully!</span>
+    </div>
     <div class="settings-container">
 
         <!-- Edit User Details Form -->
@@ -442,12 +453,25 @@
         });
     }
 
-        function showToast(message) {
+        function showToast(message, isError = false) {
             const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'show';
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.querySelector('.toast-icon');
+            
+            if (isError) {
+                toast.classList.add('toast-error');
+                toastIcon.textContent = '✕';
+            } else {
+                toast.classList.remove('toast-error');
+                toastIcon.textContent = '✓';
+            }
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            // Hide toast after 3 seconds
             setTimeout(() => {
-                toast.className = toast.className.replace('show', '');
+                toast.classList.remove('show');
             }, 3000);
         }
 

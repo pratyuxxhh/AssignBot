@@ -7,8 +7,7 @@
     <title>MCQ Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy&display=swap" rel="stylesheet">
     <style>
-
-.blurry-balls {
+        .blurry-balls {
             position: fixed;
             top: 0;
             left: 0;
@@ -58,6 +57,7 @@
                 transform: translate(50px, -50px);
             }
         }
+
         body {
             margin: 0;
             font-family: 'Sour Gummy', cursive;
@@ -237,7 +237,7 @@
         <textarea id="topicInput" placeholder="Enter a topic..."
             style="width: 100%; height: 100px; padding: 10px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #444; background-color: #222; color: #cbcbcb; font-size: 1rem; resize: none; overflow-y: auto;">
         </textarea>
-        <button onclick="generateMCQs()">Generate</button>
+        <button onclick="makePostRequest()">Generate</button>
         <div id="mcqContainer"></div> <!-- Container for dynamically added MCQs -->
 
         <!-- Submit Button (Initially Hidden) -->
@@ -245,96 +245,192 @@
     </div>
 
     <script>
-        let questions = [
-            {
-                question: "What is the capital of France?",
-                options: ["Paris", "London", "Berlin", "Madrid"],
-                answer: "Paris" // Correct answer
-            },
-            {
-                question: "Which planet is known as the Red Planet?",
-                options: ["Earth", "Mars", "Jupiter", "Venus"],
-                answer: "Mars" // Correct answer
-            },
-            {
-                question: "Who wrote 'Hamlet'?",
-                options: ["William Shakespeare", "Charles Dickens", "Mark Twain", "Jane Austen"],
-                answer: "William Shakespeare" // Correct answer
-            }
-        ];
+       let textarea = document.getElementById('topicInput');
 
-        function generateMCQs() {
-            const mcqContainer = document.getElementById('mcqContainer');
-            const submitButton = document.getElementById('submitButton');
+function makePostRequest() {
+    const topic = textarea.value.trim();
+    const mcqContainer = document.getElementById('mcqContainer');
+    
+    // Validate input
+    if (!topic) {
+        mcqContainer.innerHTML = '<div style="color: #FF416C; text-align: center; padding: 15px;">Please enter a topic or paragraph first</div>';
+        return;
+    }
+    
+    // Show loading animation
+    mcqContainer.innerHTML = `
+        <div class="loading-container" style="text-align: center; padding: 30px;">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+            <div class="loading-text">Generating questions...</div>
+        </div>
+    `;
+    
+    // Add styles for the loading animation
+    const style = document.createElement('style');
+    style.textContent = `
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .loading-text {
+            margin-top: 15px;
+            color: #8A2BE2;
+            font-size: 1.2rem;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(138, 43, 226, 0.3);
+            border-radius: 50%;
+            border-top-color: #8A2BE2;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Hide submit button while loading
+    document.getElementById('submitButton').style.display = 'none';
+    
+    // Make the POST request
+    fetch('/ai/mcq-generator', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'plain/text',
+            'Authorization': localStorage.getItem('token') ? `Bearer ${localStorage.getItem('token')}` : ''
+        },
+        body: textarea.value
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        
+        // Process the data and display MCQs
+        if (data && data.questions && data.questions.length > 0) {
+            displayMCQs(data.questions);
+        } else {
+            mcqContainer.innerHTML = '<div style="text-align: center; padding: 15px; color: #FF416C;">No questions could be generated. Try a different topic.</div>';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mcqContainer.innerHTML = '<div style="text-align: center; padding: 15px; color: #FF416C;">Sorry we have a perfect model available for this request at the moment.</div>';
+    });
+}
 
-            // Clear any existing MCQs
-            mcqContainer.innerHTML = '';
+function displayMCQs(questions) {
+    const mcqContainer = document.getElementById('mcqContainer');
+    const submitButton = document.getElementById('submitButton');
+    
+    // Clear loading animation
+    mcqContainer.innerHTML = '';
+    
+    // Store questions in a global variable for later validation
+    window.questions = questions;
+    
+    // Generate MCQs dynamically
+    questions.forEach((q, index) => {
+        const questionDiv = document.createElement('div');
+        questionDiv.style.marginTop = '20px';
+        questionDiv.style.textAlign = 'left';
+        questionDiv.style.padding = '15px';
+        questionDiv.style.backgroundColor = 'rgba(17, 17, 17, 0.7)';
+        questionDiv.style.borderRadius = '8px';
 
-            // Example MCQs (you can replace this with dynamically generated content)
+        const questionText = document.createElement('p');
+        questionText.textContent = `${index + 1}. ${q.question}`;
+        questionText.style.fontWeight = 'bold';
+        questionText.style.color = '#cbcbcb';
+        questionDiv.appendChild(questionText);
 
+        q.options.forEach(option => {
+            const optionLabel = document.createElement('label');
+            optionLabel.style.display = 'block';
+            optionLabel.style.marginBottom = '10px';
+            optionLabel.style.padding = '8px';
+            optionLabel.style.border = '1px solid #444';
+            optionLabel.style.borderRadius = '5px';
+            optionLabel.style.cursor = 'pointer';
+            optionLabel.style.transition = 'background-color 0.3s';
 
-            // Generate MCQs dynamically
-            questions.forEach((q, index) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.style.marginTop = '20px';
-                questionDiv.style.textAlign = 'left';
+            const optionInput = document.createElement('input');
+            optionInput.type = 'radio';
+            optionInput.name = `question${index}`;
+            optionInput.value = option;
+            optionInput.style.marginRight = '10px';
 
-                const questionText = document.createElement('p');
-                questionText.textContent = `${index + 1}. ${q.question}`;
-                questionText.style.fontWeight = 'bold';
-                questionDiv.appendChild(questionText);
-
-                q.options.forEach(option => {
-                    const optionLabel = document.createElement('label');
-                    optionLabel.style.display = 'block';
-                    optionLabel.style.marginBottom = '5px';
-
-                    const optionInput = document.createElement('input');
-                    optionInput.type = 'radio';
-                    optionInput.name = `question${index}`;
-                    optionInput.value = option;
-
-                    optionLabel.appendChild(optionInput);
-                    optionLabel.appendChild(document.createTextNode(` ${option}`));
-                    questionDiv.appendChild(optionLabel);
-                });
-
-                mcqContainer.appendChild(questionDiv);
+            // Add hover effect
+            optionLabel.addEventListener('mouseover', function() {
+                this.style.backgroundColor = 'rgba(138, 43, 226, 0.1)';
+            });
+            
+            optionLabel.addEventListener('mouseout', function() {
+                this.style.backgroundColor = 'transparent';
             });
 
-            // Make the Submit button visible
-            submitButton.style.display = 'block';
-        }
-        const originalFetch = window.fetch;
-        window.fetch = function(url, options = {}) {
-            const token = localStorage.getItem('token');
-            if (token) {
-                options.headers = options.headers || {};
-                options.headers = {
-                    ...options.headers,
-                    'Authorization': `Bearer ${token}`
-                };
+            optionLabel.appendChild(optionInput);
+            optionLabel.appendChild(document.createTextNode(` ${option}`));
+            questionDiv.appendChild(optionLabel);
+        });
+
+        mcqContainer.appendChild(questionDiv);
+    });
+
+    // Make the Submit button visible and style it
+    submitButton.style.display = 'block';
+    submitButton.style.margin = '20px auto';
+    submitButton.style.padding = '12px 25px';
+}
+
+function validateMarks() {
+    let score = 0;
+    let unanswered = 0;
+    const questions = window.questions;
+    
+    if (!questions || !questions.length) {
+        alert('No questions available for validation');
+        return;
+    }
+
+    questions.forEach((q, index) => {
+        const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+        if (selectedOption) {
+            if (selectedOption.value === q.answer) {
+                score++;
             }
-            return originalFetch(url, options);
-        };
-        function validateMarks() {
-
-
-            let score = 0;
-
-            questions.forEach((q, index) => {
-                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
-                if (selectedOption && selectedOption.value === q.answer) {
-                    score++;
-                }
-            });
-
-            alert(`Your score is ${score} out of ${questions.length}`);
+        } else {
+            unanswered++;
         }
-        function toggleMenu() {
-            const menu = document.getElementById('sideMenu');
-            menu.classList.toggle('open');
+    });
+
+    // Check if there are unanswered questions
+    if (unanswered > 0) {
+        if (!confirm(`You have ${unanswered} unanswered question(s). Do you want to submit anyway?`)) {
+            return;
         }
+    }
+
+    alert(`Your score is ${score} out of ${questions.length}`);
+}
+
+function toggleMenu() {
+    const menu = document.getElementById('sideMenu');
+    menu.classList.toggle('open');
+}
+
     </script>
 </body>
 

@@ -52,7 +52,6 @@ public class AuthController {
 
 
             tokenTransferer.setToken(token);
-            log.info(token);
 
             return ResponseEntity.ok(new AuthResponse(token));
 
@@ -80,19 +79,6 @@ public class AuthController {
         return new ModelAndView("signup");
     }
 
-//    @GetMapping("/login")
-//    public String loginpage(){
-//        return "login";
-//    }
-//
-//    @GetMapping("/signup")
-//    public String signuppage(){
-//        return "signup";
-//    }
-//    @GetMapping("/home")
-//    public  String homePage(){
-//        return "home";
-//    }
     @GetMapping("/ask-ai")
     public ModelAndView askAi(){
         return new ModelAndView("ask-ai");

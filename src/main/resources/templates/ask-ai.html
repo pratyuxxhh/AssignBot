@@ -220,6 +220,46 @@
             border-radius: 5px;
             z-index: 1100;
         }
+
+        /* Loading spinner */
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Loading dots animation */
+        .loading-dots {
+            display: inline-block;
+            width: 20px;
+            text-align: left;
+            animation: blink 1.4s infinite both;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 0.2;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.2;
+            }
+        }
     </style>
 </head>
 
@@ -238,15 +278,14 @@
 
     <div class="ask-ai-container">
         <h1>Ask AI</h1>
-        <div class="chat-container">
-            <!-- Example Chat Messages -->
-            <div class="chat-message user-message">Hello, how can I help you?</div>
-            <div class="chat-message ai-message">I need help with my assignment.</div>
+        <div class="chat-container" id="chatContainer">
+            <!-- Chat messages will be added dynamically -->
         </div>
 
         <div class="input-container">
-            <textarea placeholder="What's in your mind?"></textarea>
-            <button>Send</button>
+            <textarea id="userInput" placeholder="What's in your mind?"></textarea>
+            <div class="loading-spinner" id="loadingSpinner"></div>
+            <button id="sendButton">Send</button>
         </div>
     </div>
     <div class="blurry-balls">
@@ -261,6 +300,7 @@
             menu.classList.toggle('open');
         }
 
+        // Extend fetch to add authorization header
         (function () {
             const originalFetch = window.fetch;
 
@@ -279,11 +319,133 @@
             };
         })();
 
+        // Chat functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatContainer = document.getElementById('chatContainer');
+            const userInput = document.getElementById('userInput');
+            const sendButton = document.getElementById('sendButton');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            // Function to add a message to the chat
+            function addMessage(message, isUser) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('chat-message');
+                messageElement.classList.add(isUser ? 'user-message' : 'ai-message');
+                messageElement.textContent = message;
+
+                chatContainer.appendChild(messageElement);
+
+                // Scroll to bottom
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            // Add welcome message when page loads (optional)
+            addMessage('Hello! How can I help you today?', false);
+
+            // Function to send message to AI
+            async function sendMessage() {
+
+                const message = userInput.value.trim();
+                if (!message) return;
+
+                // Add user message to chat
+                addMessage(message, true);
+
+                // Clear input
+                userInput.value = '';
+
+                // Show loading spinner
+                loadingSpinner.style.display = 'block';
+                sendButton.disabled = true;
+
+                // Add a loading message with unique ID
+                const loadingMsgId = 'loading-' + Date.now();
+                const loadingElement = document.createElement('div');
+                loadingElement.id = loadingMsgId;
+                loadingElement.classList.add('chat-message', 'ai-message');
+                loadingElement.innerHTML = 'Thinking<span class="loading-dots">...</span>';
+                chatContainer.appendChild(loadingElement);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                // Animate the loading dots
+                const loadingDots = loadingElement.querySelector('.loading-dots');
+                const dotsInterval = setInterval(() => {
+                    loadingDots.textContent = loadingDots.textContent === '...' ? '' : loadingDots.textContent + '.';
+                }, 500);
+
+                try {
+                    // Send message to backend
+                    const response = await fetch(`/ai/ask-ai`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'plain/text'
+                        },
+                        body: message
+                    });
+
+                    // Check if the response was ok
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.statusText}`);
+                    }
+
+                    // Process the response as JSON
+                    const data = await response.json();
+
+                    // Remove the loading message before adding AI response
+                    clearInterval(dotsInterval);
+                    const loadingMessage = document.getElementById(loadingMsgId);
+                    if (loadingMessage) {
+                        loadingMessage.remove();
+                    }
+
+                    addMessage(formatResponse(data.choices[0].message.content), false);
+
+                } catch (error) {
+                    // Handle errors
+                    console.error('Error sending message:', error);
+
+                    // Remove the loading message
+                    clearInterval(dotsInterval);
+                    const loadingMessage = document.getElementById(loadingMsgId);
+                    if (loadingMessage) {
+                        loadingMessage.remove();
+                    }
+
+                    // Show error message
+                    addMessage('Sorry, there was an error processing your request. May be you have not generated the API key', false);
+                } finally {
+                    // Hide loading spinner and re-enable send button
+                    loadingSpinner.style.display = 'none';
+                    sendButton.disabled = false;
+                }
+            }
+
+            // Event listeners
+            sendButton.addEventListener('click', sendMessage);
+
+            userInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        });
+
         function logout() {
-            // Remove token from localStorage
+            // Remove token from localStorage but don't remove chat history
             localStorage.removeItem('token');
             // Redirect to login page
             window.location.href = '/login';
+        }
+
+        function formatResponse(text) {
+            // Add paragraph spacing
+            let formatted = text.replace(/([.?!])\s+(?=[A-Z])/g, '$1\n\n');
+
+            // Convert numbered lists like "1. item" into bullets
+            formatted = formatted.replace(/^\d+\.\s+/gm, '- ');
+
+            return formatted;
         }
     </script>
 </body>

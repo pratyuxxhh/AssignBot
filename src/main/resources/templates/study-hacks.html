@@ -57,6 +57,7 @@
                 transform: translate(50px, -50px);
             }
         }
+
         .container h1 {
             font-size: 2rem;
             color: #8A2BE2;
@@ -180,18 +181,22 @@
         .side-menu {
             position: fixed;
             top: 0;
-            left: -250px; /* Hidden by default */
+            left: -250px;
+            /* Hidden by default */
             width: 250px;
             height: 100%;
-            background: rgba(17, 17, 17, 0.3); /* Semi-transparent black */
+            background: rgba(17, 17, 17, 0.3);
+            /* Semi-transparent black */
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-            transition: left 0.3s ease; /* Smooth slide-in effect */
+            transition: left 0.3s ease;
+            /* Smooth slide-in effect */
             z-index: 1000;
             padding: 20px;
         }
 
         .side-menu.open {
-            left: 0; /* Slide in when open */
+            left: 0;
+            /* Slide in when open */
         }
 
         .side-menu h2 {
@@ -256,28 +261,118 @@
         <div class="blurry-ball"></div>
     </div>
     <script>
-        function generateOutput() {
-            const inputText = document.getElementById('inputText').value;
+        async function generateOutput() {
+            // Safely get DOM elements
+            const inputTextElement = document.getElementById('inputText');
             const outputArea = document.getElementById('outputArea');
 
-            if (inputText.trim() === "") {
-                outputArea.style.display = "none";
-                alert("Please enter some text before generating output.");
+            // Make sure required elements exist
+            if (!inputTextElement) {
+                console.error('Input text element not found');
                 return;
             }
 
-            // Example output logic (you can replace this with your own logic)
-            outputArea.innerHTML = `<strong>Generated Output:</strong><br>${inputText}`;
-            outputArea.style.display = "block";
+            if (!outputArea) {
+                console.error('Output area element not found');
+                return;
+            }
+
+            const inputText = inputTextElement.value;
+
+            // Validate input
+            if (!inputText.trim()) {
+                alert('Please enter some text before generating output.');
+                return;
+            }
+
+            // Show output area
+            outputArea.style.display = 'flex';
+
+            // Create or get loading spinner
+            let loadingSpinner = document.getElementById('loadingSpinner');
+            if (!loadingSpinner) {
+                loadingSpinner = document.createElement('div');
+                loadingSpinner.id = 'loadingSpinner';
+                loadingSpinner.className = 'loading-spinner';
+                outputArea.appendChild(loadingSpinner);
+            } else {
+                // Clear previous content except the spinner
+                Array.from(outputArea.children).forEach(child => {
+                    if (child.id !== 'loadingSpinner') {
+                        outputArea.removeChild(child);
+                    }
+                });
+            }
+
+            // Show loading spinner
+            loadingSpinner.style.display = 'block';
+
+            try {
+                // Send request to backend API
+                const response = await fetch('/ai/study-hacks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'plain/text',
+                    },
+                    body: inputText
+                });
+
+                // Check if the response is successful
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                }
+
+                // Parse the JSON response
+                const data = await response.json();
+
+                // Hide loading spinner
+                loadingSpinner.style.display = 'none';
+
+                // Create result container
+                const resultContainer = document.createElement('div');
+                resultContainer.className = 'result-container';
+
+                // Add title
+                const resultTitle = document.createElement('h3');
+                resultTitle.textContent = 'Generated Output';
+                resultContainer.appendChild(resultTitle);
+
+                // Add content
+                const resultContent = document.createElement('div');
+
+                resultContent.className = 'result-content';
+                resultContent.textContent =data.choices[0].message.content || 'No result received';
+                resultContainer.appendChild(resultContent);
+
+                // Add result to output area
+                outputArea.appendChild(resultContainer);
+
+            } catch (error) {
+                // Handle errors
+                console.error('Error generating output:', error);
+
+                // Hide loading spinner
+                if (loadingSpinner) {
+                    loadingSpinner.style.display = 'none';
+                }
+
+                // Display error message
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.textContent = `Failed to generate output: ${error.message}`;
+
+                // Add error message to output area
+                outputArea.appendChild(errorMessage);
+            }
         }
-        
+
         // Script to toggle the side menu
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             menu.classList.toggle('open');
         }
         const originalFetch = window.fetch;
-        window.fetch = function(url, options = {}) {
+        window.fetch = function (url, options = {}) {
             const token = localStorage.getItem('token');
             if (token) {
                 options.headers = options.headers || {};
@@ -288,8 +383,8 @@
             }
             return originalFetch(url, options);
         };
-
         
+
     </script>
 </body>
 

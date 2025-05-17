@@ -213,7 +213,6 @@
         xhr.onload = function () {
             if (xhr.status === 200) {
                 const data = JSON.parse(xhr.responseText); // Parse the JSON response
-                console.log("Profile Data:", data);
                 localStorage.setItem('userData', JSON.stringify(data)); // Store user data in localStorage
                 document.querySelector('.description').innerHTML = `
                                     <p>${data.description}</p>

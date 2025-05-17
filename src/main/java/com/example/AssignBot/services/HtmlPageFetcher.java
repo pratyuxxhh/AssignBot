@@ -40,7 +40,6 @@ public class HtmlPageFetcher {
                 String.class
         );
 
-        System.out.println("HTML Page:\n"+response.getBody());
     }
 }
 
