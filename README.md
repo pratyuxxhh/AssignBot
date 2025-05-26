@@ -2,19 +2,18 @@
 
 ## 📝 Overview
 
-AssignBot is a smart assignment generation assistant designed to help students create well-structured academic content with ease.
-Users can input topics, and AssignBot will intelligently generate relevant assignment material using modern web technologies and backend automation.
+**AssignBot** is an intelligent academic assistant designed to simplify and accelerate the learning and assignment creation process. With a clean interface and powerful AI integration, it helps users—from students to educators—generate meaningful content in seconds.
 
----
+Whether you're preparing notes, crafting assignments, or designing quizzes, AssignBot has you covered.
 
-## ✨ Features
+### ✨ What AssignBot Can Do:
 
-- Ask something from AI.
-- Generate assignment content with AI.
-- Clean, minimal user interface for easy use.
-- View and download generated content.
-- Backend powered by Spring Boot.
-- Docker support for quick deployment.
+- 🤖 **Ask AI**: Interact with AI to clarify concepts, generate ideas, or get answers to academic questions.
+- 🧠 **Summarize Topics**: Get concise, clear summaries of lengthy content or topics—perfect for revision and quick learning.
+- 📝 **Generate Assignments**: Automatically create detailed, structured assignments on any subject with just a few clicks.
+- ❓ **Create MCQs**: Generate multiple-choice questions based on provided topics to test knowledge or build quizzes instantly.
+
+AssignBot combines the power of modern web development with AI to bring smart study tools directly to your browser. It's fast, flexible, and student-friendly.
 
 ---
 
