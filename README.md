@@ -18,10 +18,21 @@ Users can input topics, and AssignBot will intelligently generate relevant assig
 
 ---
 
+ **How To Use ???**
+
+- Make your account , or Login.
+- Click on the Generate API key to generate one api key to use ai model in this project.
+- This will direct you to the official link of this ai model , make an account there and generate one API key , copy it.
+- Return to our Home Page and paste the API key once ( you don't have to do it everytime) , click Submit.
+- Enjoy Your AI Bot   :)
+
+---
+
 ## 🛠️ Technologies Used
 
 - **Frontend**: HTML / CSS / JavaScript  
-- **Backend**: Java / Spring Boot  
+- **Backend**: Java / Spring Boot
+- **Authentication** : JWT Authentication
 - **AI Model**:  mistralai/mistral-7b-instruct
 - **Build Tool**: Maven  
 - **Containerization**: Docker
@@ -55,6 +66,12 @@ See AssignBot in action:
 
 
  <img src="https://github.com/user-attachments/assets/f170c874-33fd-4b8a-99ff-139a02a9648a" width="800" />
+
+
+
+ YES , the quality of this gif is not so good , it would be better if you click the link below and use AssignBot.
+
+
 
 ---
 
