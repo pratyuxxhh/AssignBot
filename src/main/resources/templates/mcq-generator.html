@@ -327,7 +327,7 @@ function makePostRequest() {
     })
     .catch(error => {
         console.error('Error:', error);
-        mcqContainer.innerHTML = '<div style="text-align: center; padding: 15px; color: #FF416C;">Sorry we have a perfect model available for this request at the moment.</div>';
+        mcqContainer.innerHTML = '<div style="text-align: center; padding: 15px; color: #FF416C;">Sorry we don't have a perfect model available for this request at the moment.</div>';
     });
 }
 
