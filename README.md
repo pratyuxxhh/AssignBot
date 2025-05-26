@@ -53,9 +53,8 @@ Ask Ai Feature...
 
 See AssignBot in action:
 
-🎥 [Click here to watch the demo video]([https://drive.google.com/your-link](https://drive.google.com/file/d/1lY6ZMCAZ49bwqxmGSZCXmV8JlEqIzh7a/view?usp=drive_link))
 
-
+ <img src="https://github.com/user-attachments/assets/f170c874-33fd-4b8a-99ff-139a02a9648a" width="800" />
 
 ---
 
